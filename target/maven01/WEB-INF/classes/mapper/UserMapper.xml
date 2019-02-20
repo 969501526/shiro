@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.clj.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.clj.entity.User" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <collection property="role" ofType="com.clj.entity.Role">
+      <id column="role_id" property="roleId" jdbcType="INTEGER" />
+      <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+  <select id="getUselAll" resultMap="BaseResultMap">
+    select * from user
+  </select>
+  <select id="getPasswordByUsername" resultMap="BaseResultMap" parameterType="String">
+    select user_id,username,password from user where username=#{username}
+  </select>
+
+  <insert id="saveUser" parameterType="com.clj.entity.User">
+    insert into user(username,password) value (#{username},#{password})
+  </insert>
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.clj.dao.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.clj.entity.Role" >
+    <id column="role_id" property="roleId" jdbcType="INTEGER" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="getUserByRoles" resultMap="BaseResultMap" parameterType="String">
+    select r.role_name from user_role ur
+    inner join user u on u.user_id=ur.user_id
+    inner join role r on r.role_id=ur.role_id
+    where u.username=#{username}
+  </select>
+  <select id="getUserByRoleId" resultMap="BaseResultMap" parameterType="String">
+    select r.role_id from user_role ur
+    inner join user u on u.user_id=ur.user_id
+    inner join role r on r.role_id=ur.role_id
+    where u.username=#{username}
+  </select>
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.clj.dao.ResourcesMapper" >
+  <resultMap id="BaseResultMap" type="com.clj.entity.Resources" >
+    <id column="resources_id" property="resourcesId" jdbcType="INTEGER" />
+    <result column="jurisdiction_name" property="jurisdictionName" jdbcType="VARCHAR" />
+    <result column="resources_name" property="resourcesName" jdbcType="VARCHAR" />
+    <result column="resources_url" property="resourcesUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="getRoleByResoures" resultMap="BaseResultMap" parameterType="Integer">
+    select re.resources_url from role_resources rr
+  inner join role r on r.role_id=rr.role_id
+  inner join resources re on re.resources_id=rr.resources_id
+  where rr.role_id=#{roleId}
+  </select>
+</mapper>

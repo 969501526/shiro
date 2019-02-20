@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:utl="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                        http://www.springframework.org/schema/mvc
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager" />
+        <property name="loginUrl" value="login.html" />
+        <property name="unauthorizedUrl" value="403.html" />
+        <property name="filterChainDefinitions">
+            <value>
+                <!--无需认证-->
+                /login.html = anon
+                /getUsernameByPassword = anon
+                /subLogin = anon
+                /saveUser =anon
+                <!--具备角色才能访问-->
+                /testRole = roles["admin"]
+                /testRole1 = roles["admin","user"]
+                /testRole2 = roles["admin","user1"]
+                /testPerms2 = rolesOr["admin","admin1"]
+                <!--具备权限才能访问-->
+                /testPerms = perms["testPerms"]
+                /testPerms1 = perms["testPerms1"]
+                <!--经过认证才能访问相应路径-->
+                /* = authc
+            </value>
+        </property>
+        <property name="filters">
+            <utl:map>
+                <entry key="rolesOr" value-ref="rolesOrFilter" />
+            </utl:map>
+        </property>
+    </bean>
+    <bean class="com.clj.filter.RolesOrFilter" id="rolesOrFilter" />
+    <!--创建securityManager对象-->
+    <bean class="org.apache.shiro.web.mgt.DefaultWebSecurityManager" id="securityManager">
+        <property name="realm" ref="realm" />
+        <property name="rememberMeManager" ref="cookieRememberMeManager" />
+    </bean>
+
+    <bean class="com.clj.shiro.MyRealm" id="realm">
+        <property name="credentialsMatcher" ref="credentialsMatcher" />
+    </bean>
+    <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher" id="credentialsMatcher">
+        <property name="hashAlgorithmName" value="md5" />
+        <property name="hashIterations" value="1" />
+    </bean>
+
+    <bean class="org.apache.shiro.web.mgt.CookieRememberMeManager" id="cookieRememberMeManager">
+        <property name="cookie" ref="cookie" />
+    </bean>
+    <bean class="org.apache.shiro.web.servlet.SimpleCookie" id="cookie">
+        <constructor-arg value="rememberMe" />
+        <property name="maxAge" value="200000" />
+    </bean>
+</beans>
